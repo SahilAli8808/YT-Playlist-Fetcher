@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { FaSignInAlt, FaSignOutAlt, FaPlayCircle, FaChevronDown, FaChevronUp, FaVideo } from 'react-icons/fa'
+import YouTubePlaylistFetcher from './components/YouTubePlaylistFetcher'
 
 const Home = () => {
   const { data: session } = useSession()
@@ -138,6 +139,16 @@ const Home = () => {
             <FaSignInAlt />
             <span>Sign in with Google</span>
           </button>
+        </div>
+      )}
+
+      {/* OR Section */}
+      {(!session && playlists.length === 0) && (
+        <div className="w-full max-w-3xl bg-white p-6 mt-6 border-t border-gray-300">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">---------------- OR --------------------</h2>
+          <p className="text-center text-gray-600 mb-4">You can also fetch playlists by entering a YouTube Channel ID below:</p>
+          {/* YouTube Playlist Fetcher Component */}
+          <YouTubePlaylistFetcher />
         </div>
       )}
     </div>
