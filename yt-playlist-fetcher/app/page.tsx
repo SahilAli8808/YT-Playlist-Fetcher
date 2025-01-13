@@ -1,114 +1,79 @@
-'use client';
+'use client'
 
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { Playlist, PlaylistItem } from "./types/youtube";
-import { fetchPlaylists, fetchPlaylistItems } from "./lib/youtube";
-import PlaylistCard from "./components/PlaylistCard";
-import PlaylistItemCard from "./components/PlaylistItemCard";
+import { useState, useEffect } from 'react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
-export default function Home() {
-  const { data: session } = useSession();
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
-  const [playlistItems, setPlaylistItems] = useState<PlaylistItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const Home = () => {
+  const { data: session } = useSession()
+  const [playlists, setPlaylists] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+
+  // Function to fetch playlists after user logs in
+  const fetchPlaylists = async () => {
+    if (!session?.accessToken) {
+      alert('You need to sign in first!')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/fetchPlaylists')
+      const data = await res.json()
+      
+      if (data.error) {
+        alert(data.error)
+        console.log(data)
+        setLoading(false)
+        return
+      }
+
+      setPlaylists(data.items)
+    } catch (error) {
+      alert('Failed to fetch playlists')
+      setLoading(false)
+    }
+
+    setLoading(false)
+  }
 
   useEffect(() => {
-    async function loadPlaylists() {
-      if (session?.accessToken) {
-        setLoading(true);
-        setError(null);
-        try {
-          const data = await fetchPlaylists(session.accessToken);  // Removed 'as string' since type is now defined
-          setPlaylists(data.items);
-        } catch (err) {
-          setError('Failed to load playlists');
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      }
+    if (session) {
+      fetchPlaylists() // Fetch playlists automatically after login
     }
-    loadPlaylists();
-  }, [session]);
-
-  async function handlePlaylistClick(playlistId: string) {
-    setSelectedPlaylist(playlistId);
-    if (session?.accessToken) {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchPlaylistItems(playlistId, session.accessToken);  // Removed 'as string'
-        setPlaylistItems(data.items);
-      } catch (err) {
-        setError('Failed to load playlist items');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  }
-
-  if (!session) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-24">
-        <button
-          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 transition-colors"
-          onClick={() => signIn("google")}
-        >
-          Sign in with Google
-        </button>
-      </div>
-    );
-  }
+  }, [session])
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">YouTube Playlists</h1>
-        <button
-          className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 transition-colors"
-          onClick={() => signOut()}
-        >
-          Sign Out
-        </button>
-      </div>
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="flex justify-center items-center min-h-[200px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    <div className="container">
+      <h1>YouTube Playlist Data Retriever</h1>
+      {session ? (
+        <div>
+          <h2>Your Playlists:</h2>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <ul>
+              {playlists.length > 0 ? (
+                playlists.map((playlist: any) => (
+                  <li key={playlist.id}>
+                    <h3>{playlist.snippet.title}</h3>
+                    <p>{playlist.snippet.description}</p>
+                  </li>
+                ))
+              ) : (
+                <p>No playlists found.</p>
+              )}
+            </ul>
+          )}
+          <button onClick={() => signOut()}>Sign out</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Your Playlists</h2>
-            {playlists.map((playlist) => (
-              <PlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                onClick={handlePlaylistClick}
-              />
-            ))}
-          </div>
-
-          {selectedPlaylist && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Playlist Items</h2>
-              {playlistItems.map((item) => (
-                <PlaylistItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          )}
+        <div>
+          <button onClick={() => signIn('google')}>Sign in with Google</button>
         </div>
       )}
     </div>
-  );
+  )
 }
+
+export default Home

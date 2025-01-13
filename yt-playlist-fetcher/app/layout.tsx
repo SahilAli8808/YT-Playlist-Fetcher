@@ -1,25 +1,18 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { AuthProvider } from "./providers/AuthProvider";
-// import { AuthProvider } from "./providers/AuthProvider";
+'use client' // Add this line at the top to mark this as a Client Component
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
-  title: "YouTube Playlist Viewer",
-  description: "View and manage your YouTube playlists",
-};
+import { SessionProvider } from 'next-auth/react'
+import './globals.css'
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
-      </body>
-    </html>
-  );
+    <SessionProvider>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </SessionProvider>
+  )
 }
