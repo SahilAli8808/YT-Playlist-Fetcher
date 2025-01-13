@@ -2,6 +2,13 @@
 
 A Next.js application that allows users to fetch and display YouTube playlists and their video details. Users can sign in with Google, view their playlists, and explore video titles with thumbnails. Optionally, users can input a Channel ID to fetch playlists without logging in.
 
+## Screenshots:
+### 1. Landing Page (Before Signing In)
+![Playlist View](https://github.com/SahilAli8808/YT-Playlist-Fetcher/blob/main/Screenshots/Screenshot1.jpg)
+
+### 2. Playlists View (After Signing In)
+![Channel ID Fetcher](https://github.com/SahilAli8808/YT-Playlist-Fetcher/blob/main/Screenshots/Screenshot2.jpg)
+
 ## Features:
 - Google Sign-In for user authentication
 - Fetch and display YouTube playlists and videos
@@ -9,12 +16,6 @@ A Next.js application that allows users to fetch and display YouTube playlists a
 - Option to fetch playlists using a YouTube Channel ID
 - Clean and responsive UI
 
-## Screenshots:
-### 1. Landing Page (Before Signing In)
-![Playlist View](https://github.com/SahilAli8808/YT-Playlist-Fetcher/blob/main/Screenshots/Screenshot1.jpg)
-
-### 2. Playlists View (After Signing In)
-![Channel ID Fetcher](https://github.com/SahilAli8808/YT-Playlist-Fetcher/blob/main/Screenshots/Screenshot2.jpg)
 
 ## Setup:
 1. **Clone the repo**:
