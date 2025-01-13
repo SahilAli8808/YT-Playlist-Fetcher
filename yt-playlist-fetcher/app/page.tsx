@@ -1,13 +1,38 @@
 'use client'
 
+interface Playlist {
+  id: string;
+  snippet: {
+    title: string;
+    description: string;
+    thumbnails: {
+      medium: {
+        url: string;
+      };
+    };
+  };
+  videos: Array<{
+    id: string;
+    snippet: {
+      title: string;
+      thumbnails: {
+        medium?: {
+          url: string;
+        };
+      };
+    };
+  }>;
+}
+
 import { useState, useEffect } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { FaSignInAlt, FaSignOutAlt, FaPlayCircle, FaChevronDown, FaChevronUp, FaVideo } from 'react-icons/fa'
 import YouTubePlaylistFetcher from './components/YouTubePlaylistFetcher'
+import Image from 'next/image'
 
 const Home = () => {
   const { data: session } = useSession()
-  const [playlists, setPlaylists] = useState<any[]>([])
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(false)
   const [expandedPlaylist, setExpandedPlaylist] = useState<number | null>(null)
 
@@ -93,7 +118,7 @@ const Home = () => {
                               <strong className="ml-2 text-gray-800">{video.snippet.title}</strong>
                             </div>
                             <div className="flex items-center space-x-4 flex-shrink-0">
-                              <img 
+                            <Image 
                                 src={video.snippet.thumbnails.medium.url} 
                                 alt="Video thumbnail" 
                                 className="w-16 h-16 object-cover rounded-md" 

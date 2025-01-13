@@ -1,7 +1,25 @@
 import { useState } from 'react'
 import { FaPlayCircle, FaChevronUp, FaChevronDown, FaVideo } from 'react-icons/fa'
 
-const YouTubePlaylistList = ({ playlists }: { playlists: any[] }) => {
+interface Video {
+  id: string;
+  snippet: {
+    title: string;
+    thumbnails: {
+      medium: { url: string };
+    };
+  };
+}
+
+interface Playlist {
+  id: string;
+  snippet: {
+    title: string;
+  };
+  items: Video[];
+}
+
+const YouTubePlaylistList = ({ playlists }: { playlists: Playlist[] }) => {
   const [expandedPlaylist, setExpandedPlaylist] = useState<number | null>(null)
 
   const handleToggle = (index: number) => {
