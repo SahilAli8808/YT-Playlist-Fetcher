@@ -15,6 +15,9 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  // session: {
+  //   jwt: true, // Use JWT for session
+  // },
   callbacks: {
     // Attach accessToken to JWT token
     async jwt({ token, account }) {

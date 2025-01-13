@@ -7,8 +7,13 @@ const YOUTUBE_PLAYLIST_ITEMS_API_URL = 'https://www.googleapis.com/youtube/v3/pl
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req })
+  console.log('Session in Production:', session)
+
+   // Prevent caching of the response
+   res.setHeader('Cache-Control', 'no-store')
   
   if (!session || !session.accessToken) {
+
     return res.status(401).json({ error: 'Not authenticated' })
   }
 
@@ -34,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const playlistsWithVideos = await Promise.all(
       playlists.map(async (playlist: any) => {
         const videoResponse = await fetch(
-          `${YOUTUBE_PLAYLIST_ITEMS_API_URL}?part=snippet&playlistId=${playlist.id}&maxResults=5`, // Limiting to 5 videos per playlist
+          `${YOUTUBE_PLAYLIST_ITEMS_API_URL}?part=snippet&playlistId=${playlist.id}&maxResults=10`, // Limiting to 5 videos per playlist
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
