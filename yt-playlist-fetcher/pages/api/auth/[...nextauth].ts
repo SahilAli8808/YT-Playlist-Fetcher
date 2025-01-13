@@ -14,6 +14,7 @@ export default NextAuth({
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     // Attach accessToken to JWT token
     async jwt({ token, account }) {

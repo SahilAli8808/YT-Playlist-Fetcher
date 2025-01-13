@@ -118,7 +118,7 @@ const Home = () => {
                               <strong className="ml-2 text-gray-800">{video.snippet.title}</strong>
                             </div>
                             <div className="flex items-center space-x-4 flex-shrink-0">
-                            <Image 
+                            <img
                                 src={video.snippet.thumbnails.medium.url} 
                                 alt="Video thumbnail" 
                                 className="w-16 h-16 object-cover rounded-md" 
